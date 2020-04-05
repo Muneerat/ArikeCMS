@@ -28,29 +28,41 @@ $post_author = $_POST['post_author'];
 $post_title = $_POST['post_title'];
 $post_category_id = $_POST['post_category_id'];
 $post_status = $_POST['post_status'];
-//ridwan // $post_image = $_FILES['image']['name'];
-//ridwan// $post_image_temp = $_FILES['image']['tmp_name'];
+$post_image = $_FILES['post_image']['name'];
+$post_image_temp = $_FILES['post_image']['tmp_name']; 
 $post_content = $_POST['post_content'];
 $post_tags = $_POST['post_tags'];
 
-//ridwan// move_uploaded_file($post_image_temp,"../images/$post_image");
+move_uploaded_file($post_image_temp, "../images/$post_image");
 
-// $query = "UPDATE posts SET ";
-// $query .="post_author = '{$post_author}', ";
-// $query .="post_title = '{$post_title}', ";
-// $query .="post_category_id = '{$post_category_id}', ";
-// $query .="post_status = '{$post_status}', ";
-// $query .="post_image = '{$post_image}', ";
-// $query .="post_date = now(), ";
-// $query .="post_content = '{$post_content}', ";
-// $query .="post_tags = '{$post_tags}' ";
-// $query .="WHERE post_id = {$the_post_id} ";
+if (empty($post_image)) {
+	
+	$query = "SELECT * FROM posts WHERE posts_id = $the_post_id";
+	$select_image = mysqli_query($connection, $query);
 
-// $update_post = mysqli_query($connection,$query);
+while ($row = mysqli_fetch_array($select_image)){
+	$post_image =$row['post_image'];
+} 
 
-// confirmQuery($update_post);
+}
+}
+ 
+$query = "UPDATE posts SET ";
+$query .="post_author = '{$post_author}', ";
+$query .="post_title = '{$post_title}', ";
+$query .="post_category_id = '{$post_category_id}', ";
+$query .="post_status = '{$post_status}', ";
+$query .="post_image = '{$post_image}', ";
+$query .="post_date = now(), ";
+$query .="post_content = '{$post_content}', ";
+$query .="post_tags = '{$post_tags}' ";
+$query .="WHERE posts_id = {$the_post_id} ";
 
- }
+$update_post = mysqli_query($connection,$query);
+
+confirmQuery($update_post);
+
+ 
 ?>
 
  <form action="" method="post" enctype="multipart/form-data">
@@ -93,6 +105,7 @@ $post_tags = $_POST['post_tags'];
 
 <div class="form-group">
 	<img width="100" src="../images/<?php echo $post_image;?>" alt="">
+	<input type="file" name="post_image">
 </div>
 
 <div class="form-group">
